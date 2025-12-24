@@ -11,12 +11,5 @@ const PokemonAPI = {
         const response = await fetch(`${API_BASE_URL}/pokemon/${nameOrId}`);
         if (!response.ok) throw new Error(`Pokémon ${nameOrId} não encontrado`);
         return response.json();
-    },
-
-    async getTotalCount() {
-        const response = await fetch(`${API_BASE_URL}/pokemon?limit=1`);
-        if (!response.ok) throw new Error('Erro ao buscar contagem');
-        const data = await response.json();
-        return Math.min(data.count, 151);
     }
 };
