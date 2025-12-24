@@ -25,7 +25,7 @@ const UI = {
             || pokemon.sprites.front_default;
 
         return `
-            <article class="pokemon-card" data-id="${pokemon.id}">
+            <article class="pokemon-card pokemon-card--${mainType}" data-id="${pokemon.id}" data-type="${mainType}">
                 <div class="pokemon-card__header">
                     <span class="pokemon-card__type-badge pokemon-card__type-badge--${mainType}">${mainType}</span>
                     <span class="pokemon-card__id">#${String(pokemon.id).padStart(3, '0')}</span>
