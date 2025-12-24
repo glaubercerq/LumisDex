@@ -25,6 +25,26 @@
         </header>
 
         <main class="main">
+            <section class="search-section">
+                <div class="search-container">
+                    <div class="search-box">
+                        <input 
+                            type="text" 
+                            id="searchInput" 
+                            class="search-box__input" 
+                            placeholder="Buscar pokémon por nome ou número..."
+                            autocomplete="off"
+                        >
+                        <button class="search-box__button" id="searchButton">
+                            <svg class="search-box__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="11" cy="11" r="8"></circle>
+                                <path d="m21 21-4.35-4.35"></path>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </section>
+
             <section class="pokemon-section">
                 <div class="pokemon-grid" id="pokemonGrid"></div>
                 <div class="loading" id="loading">
