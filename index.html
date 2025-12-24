@@ -18,57 +18,95 @@
                     <span class="header__title">LumisDex</span>
                 </div>
                 <nav class="header__nav">
-                    <a href="#" class="header__nav-link">Home</a>
-                    <a href="#" class="header__nav-link">Pokédex</a>
+                    <a href="#" class="header__nav-link header__nav-link--active" data-page="home">Home</a>
+                    <a href="#" class="header__nav-link" data-page="pokedex">Pokédex</a>
                 </nav>
             </div>
         </header>
 
         <main class="main">
-            <section class="search-section">
-                <div class="search-container">
-                    <div class="search-box">
-                        <input 
-                            type="text" 
-                            id="searchInput" 
-                            class="search-box__input" 
-                            placeholder="Buscar pokémon por nome ou número..."
-                            autocomplete="off"
-                        >
-                        <button class="search-box__button" id="searchButton">
-                            <svg class="search-box__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <circle cx="11" cy="11" r="8"></circle>
-                                <path d="m21 21-4.35-4.35"></path>
+            <section class="page page--active" id="homePage">
+                <div class="hero">
+                    <div class="hero__content">
+                        <h1 class="hero__title">Explore o mundo dos <span class="hero__highlight">Pokémon</span></h1>
+                        <p class="hero__description">Descubra informações sobre todos os Pokémon. Busque por nome, veja seus tipos e explore a primeira geração completa.</p>
+                        <button class="hero__button" id="exploreButton">
+                            Explorar Pokédex
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="m9 18 6-6-6-6"></path>
                             </svg>
                         </button>
+                    </div>
+                    <div class="hero__visual">
+                        <div class="hero__pokeball"></div>
+                        <div class="hero__glow"></div>
+                    </div>
+                </div>
+                <div class="features">
+                    <div class="feature">
+                        <div class="feature__icon">🔍</div>
+                        <h3 class="feature__title">Busca Rápida</h3>
+                        <p class="feature__text">Encontre qualquer Pokémon por nome ou número</p>
+                    </div>
+                    <div class="feature">
+                        <div class="feature__icon">📱</div>
+                        <h3 class="feature__title">Responsivo</h3>
+                        <p class="feature__text">Acesse de qualquer dispositivo</p>
+                    </div>
+                    <div class="feature">
+                        <div class="feature__icon">⚡</div>
+                        <h3 class="feature__title">Tempo Real</h3>
+                        <p class="feature__text">Dados atualizados da PokéAPI</p>
                     </div>
                 </div>
             </section>
 
-            <section class="pokemon-section">
-                <div class="pokemon-grid" id="pokemonGrid"></div>
-                <div class="loading" id="loading">
-                    <div class="loading__spinner"></div>
-                    <p class="loading__text">Carregando Pokémon...</p>
-                </div>
-            </section>
+            <section class="page" id="pokedexPage">
+                <section class="search-section">
+                    <div class="search-container">
+                        <div class="search-box">
+                            <input 
+                                type="text" 
+                                id="searchInput" 
+                                class="search-box__input" 
+                                placeholder="Buscar pokémon por nome ou número..."
+                                autocomplete="off"
+                            >
+                            <button class="search-box__button" id="searchButton">
+                                <svg class="search-box__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="11" cy="11" r="8"></circle>
+                                    <path d="m21 21-4.35-4.35"></path>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </section>
 
-            <section class="pagination-section">
-                <div class="pagination" id="pagination">
-                    <button class="pagination__button pagination__button--prev" id="prevButton" disabled>
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="m15 18-6-6 6-6"></path>
-                        </svg>
-                        Anterior
-                    </button>
-                    <div class="pagination__numbers" id="paginationNumbers"></div>
-                    <button class="pagination__button pagination__button--next" id="nextButton">
-                        Próximo
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="m9 18 6-6-6-6"></path>
-                        </svg>
-                    </button>
-                </div>
+                <section class="pokemon-section">
+                    <div class="pokemon-grid" id="pokemonGrid"></div>
+                    <div class="loading" id="loading">
+                        <div class="loading__spinner"></div>
+                        <p class="loading__text">Carregando Pokémon...</p>
+                    </div>
+                </section>
+
+                <section class="pagination-section">
+                    <div class="pagination" id="pagination">
+                        <button class="pagination__button pagination__button--prev" id="prevButton" disabled>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="m15 18-6-6 6-6"></path>
+                            </svg>
+                            Anterior
+                        </button>
+                        <div class="pagination__numbers" id="paginationNumbers"></div>
+                        <button class="pagination__button pagination__button--next" id="nextButton">
+                            Próximo
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="m9 18 6-6-6-6"></path>
+                            </svg>
+                        </button>
+                    </div>
+                </section>
             </section>
         </main>
     </div>
