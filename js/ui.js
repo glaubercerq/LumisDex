@@ -1,7 +1,9 @@
 const UI = {
     elements: {
         pokemonGrid: document.getElementById('pokemonGrid'),
-        loading: document.getElementById('loading')
+        loading: document.getElementById('loading'),
+        searchInput: document.getElementById('searchInput'),
+        searchButton: document.getElementById('searchButton')
     },
 
     showLoading() {
