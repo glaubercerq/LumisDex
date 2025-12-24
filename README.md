@@ -79,8 +79,32 @@ Utilizei recursos modernos do CSS como:
 
 ### Performance
 - Lazy loading de imagens
-- Carregamento sob demanda (Pokémon só são carregados ao acessar a Pokédex)
+- Carregamento sob demanda dos detalhes (apenas 15 Pokémon por página)
+- Cache de dados para evitar requisições duplicadas
 - Paginação para evitar renderização excessiva
+
+### Estratégia de Busca e Paginação
+
+A PokéAPI não oferece endpoint de busca por texto parcial (ex: `/pokemon?search=pika`). As únicas opções disponíveis são:
+- Busca por nome/ID exato: `GET /pokemon/pikachu`
+- Listagem paginada: `GET /pokemon?limit=15&offset=0`
+
+**Decisão técnica adotada:**
+
+Para permitir busca parcial (digitar "char" e encontrar "Charmander"), implementei uma estratégia híbrida:
+
+1. **Inicialização**: Carrego a lista de nomes dos 151 Pokémon (~3KB, requisição leve)
+2. **Paginação**: Carrego os detalhes apenas dos 15 Pokémon da página atual
+3. **Busca**: Filtro a lista de nomes no client-side e carrego os detalhes dos resultados
+
+**Justificativa:**
+- A requisição de nomes é extremamente leve (apenas `name` e `url`)
+- Os detalhes (imagens, stats, abilities) são carregados sob demanda
+- Permite busca parcial em toda a geração, melhorando a UX
+- Mantém boa performance com cache dos dados já carregados
+
+**Alternativa descartada:**
+Busca por nome exato exigiria que o usuário digitasse o nome completo do Pokémon, prejudicando a experiência do usuário.
 
 ### Git Flow
 O projeto foi desenvolvido seguindo o Git Flow com branches organizadas:
