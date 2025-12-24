@@ -3,6 +3,9 @@ const App = {
         allPokemon: [],
         filteredPokemon: [],
         displayedPokemon: [],
+        currentPage: 1,
+        itemsPerPage: 15,
+        totalPages: 1,
         searchTerm: ''
     },
 
@@ -17,6 +20,8 @@ const App = {
         UI.elements.searchInput.addEventListener('keypress', (e) => {
             if (e.key === 'Enter') this.handleSearch(e.target.value);
         });
+        UI.elements.prevButton.addEventListener('click', () => this.goToPage(this.state.currentPage - 1));
+        UI.elements.nextButton.addEventListener('click', () => this.goToPage(this.state.currentPage + 1));
     },
 
     async loadAllPokemon() {
@@ -26,8 +31,8 @@ const App = {
             const pokemonPromises = data.results.map(p => PokemonAPI.getPokemonDetails(p.name));
             this.state.allPokemon = await Promise.all(pokemonPromises);
             this.state.filteredPokemon = [...this.state.allPokemon];
-            this.state.displayedPokemon = [...this.state.filteredPokemon];
-            UI.renderPokemonList(this.state.displayedPokemon);
+            this.updatePagination();
+            this.renderCurrentPage();
         } catch (error) {
             console.error('Erro ao carregar Pokémon:', error);
         } finally {
@@ -51,7 +56,34 @@ const App = {
         }
 
         this.state.filteredPokemon = result;
-        this.state.displayedPokemon = [...this.state.filteredPokemon];
+        this.state.currentPage = 1;
+        this.updatePagination();
+        this.renderCurrentPage();
+    },
+
+    updatePagination() {
+        this.state.totalPages = Math.ceil(this.state.filteredPokemon.length / this.state.itemsPerPage) || 1;
+        UI.updatePagination(this.state.currentPage, this.state.totalPages, (page) => this.goToPage(page));
+        
+        if (this.state.filteredPokemon.length <= this.state.itemsPerPage) {
+            UI.hidePagination();
+        } else {
+            UI.showPagination();
+        }
+    },
+
+    goToPage(page) {
+        if (page < 1 || page > this.state.totalPages) return;
+        this.state.currentPage = page;
+        this.updatePagination();
+        this.renderCurrentPage();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    },
+
+    renderCurrentPage() {
+        const start = (this.state.currentPage - 1) * this.state.itemsPerPage;
+        const end = start + this.state.itemsPerPage;
+        this.state.displayedPokemon = this.state.filteredPokemon.slice(start, end);
         UI.renderPokemonList(this.state.displayedPokemon);
     }
 };

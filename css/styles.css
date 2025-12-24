@@ -384,6 +384,90 @@ body::before {
     font-size: 1.1rem;
 }
 
+.pagination-section {
+    margin-top: 3rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--color-border);
+}
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.pagination__button {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.6rem 1rem;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 30px;
+    color: var(--color-text-muted);
+    font-family: inherit;
+    font-size: 0.85rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.pagination__button:hover:not(:disabled) {
+    background: var(--color-surface-hover);
+    color: var(--color-text);
+    border-color: var(--color-accent);
+}
+
+.pagination__button:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+
+.pagination__button svg {
+    width: 16px;
+    height: 16px;
+}
+
+.pagination__numbers {
+    display: flex;
+    gap: 0.4rem;
+}
+
+.pagination__number {
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--color-border);
+    background: var(--color-surface);
+    color: var(--color-text-muted);
+    font-family: inherit;
+    font-size: 0.85rem;
+    font-weight: 500;
+    cursor: pointer;
+    border-radius: 50%;
+    transition: var(--transition);
+}
+
+.pagination__number:hover {
+    background: var(--color-surface-hover);
+    color: var(--color-text);
+}
+
+.pagination__number--active {
+    background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-accent-secondary) 100%);
+    border-color: transparent;
+    color: #0a0a0f;
+    font-weight: 600;
+}
+
+.pagination__number--active:hover {
+    background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-accent-secondary) 100%);
+    color: #0a0a0f;
+}
+
 @media (max-width: 768px) {
     .header__container {
         padding: 0 1rem;
@@ -453,6 +537,22 @@ body::before {
     }
 
     .pokemon-card__name {
+        font-size: 0.8rem;
+    }
+
+    .pagination {
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+
+    .pagination__button {
+        padding: 0.5rem 0.75rem;
+        font-size: 0.8rem;
+    }
+
+    .pagination__number {
+        width: 32px;
+        height: 32px;
         font-size: 0.8rem;
     }
 }
