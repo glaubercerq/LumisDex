@@ -3,7 +3,11 @@ const UI = {
         pokemonGrid: document.getElementById('pokemonGrid'),
         loading: document.getElementById('loading'),
         searchInput: document.getElementById('searchInput'),
-        searchButton: document.getElementById('searchButton')
+        searchButton: document.getElementById('searchButton'),
+        prevButton: document.getElementById('prevButton'),
+        nextButton: document.getElementById('nextButton'),
+        paginationNumbers: document.getElementById('paginationNumbers'),
+        pagination: document.getElementById('pagination')
     },
 
     showLoading() {
@@ -50,5 +54,44 @@ const UI = {
             return;
         }
         this.elements.pokemonGrid.innerHTML = pokemonList.map(p => this.renderPokemonCard(p)).join('');
+    },
+
+    renderPaginationNumbers(currentPage, totalPages, onPageClick) {
+        const numbers = [];
+        const maxVisible = 5;
+        let start = Math.max(1, currentPage - Math.floor(maxVisible / 2));
+        let end = Math.min(totalPages, start + maxVisible - 1);
+
+        if (end - start + 1 < maxVisible) {
+            start = Math.max(1, end - maxVisible + 1);
+        }
+
+        for (let i = start; i <= end; i++) {
+            const isActive = i === currentPage ? 'pagination__number--active' : '';
+            numbers.push(`<button class="pagination__number ${isActive}" data-page="${i}">${i}</button>`);
+        }
+
+        this.elements.paginationNumbers.innerHTML = numbers.join('');
+
+        this.elements.paginationNumbers.querySelectorAll('.pagination__number').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const page = parseInt(btn.dataset.page);
+                onPageClick(page);
+            });
+        });
+    },
+
+    updatePagination(currentPage, totalPages, onPageClick) {
+        this.elements.prevButton.disabled = currentPage <= 1;
+        this.elements.nextButton.disabled = currentPage >= totalPages;
+        this.renderPaginationNumbers(currentPage, totalPages, onPageClick);
+    },
+
+    showPagination() {
+        this.elements.pagination.style.display = 'flex';
+    },
+
+    hidePagination() {
+        this.elements.pagination.style.display = 'none';
     }
 };
