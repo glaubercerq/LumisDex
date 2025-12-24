@@ -4,6 +4,7 @@ const UI = {
         loading: document.getElementById('loading'),
         searchInput: document.getElementById('searchInput'),
         searchButton: document.getElementById('searchButton'),
+        typeFilter: document.getElementById('typeFilter'),
         prevButton: document.getElementById('prevButton'),
         nextButton: document.getElementById('nextButton'),
         paginationNumbers: document.getElementById('paginationNumbers'),
@@ -13,6 +14,12 @@ const UI = {
         modalClose: document.getElementById('modalClose'),
         modalBody: document.getElementById('modalBody')
     },
+
+    pokemonTypes: [
+        'normal', 'fire', 'water', 'electric', 'grass', 'ice',
+        'fighting', 'poison', 'ground', 'flying', 'psychic', 'bug',
+        'rock', 'ghost', 'dragon', 'dark', 'steel', 'fairy'
+    ],
 
     typeColors: {
         normal: '#9da0aa',
@@ -44,6 +51,14 @@ const UI = {
         this.elements.loading.classList.remove('loading--active');
     },
 
+    renderTypeFilter() {
+        const options = this.pokemonTypes.map(type => {
+            const typeName = type.charAt(0).toUpperCase() + type.slice(1);
+            return `<option value="${type}">${typeName}</option>`;
+        }).join('');
+        this.elements.typeFilter.innerHTML = `<option value="">Todos os tipos</option>${options}`;
+    },
+
     renderPokemonCard(pokemon) {
         const mainType = pokemon.types[0].type.name;
         const sprite = pokemon.sprites.other['official-artwork'].front_default 
@@ -68,7 +83,7 @@ const UI = {
         `;
     },
 
-    renderPokemonList(pokemonList) {
+    renderPokemonList(pokemonList, totalCount = null) {
         if (pokemonList.length === 0) {
             this.elements.pokemonGrid.innerHTML = `
                 <div class="no-results">

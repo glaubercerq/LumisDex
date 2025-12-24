@@ -5,10 +5,13 @@ const App = {
         totalPages: 1,
         totalCount: 151,
         searchTerm: '',
+        selectedType: '',
         currentPageView: 'home',
         isInitialized: false,
+        allPokemonNames: [],
+        filteredPokemonNames: [],
         cachedPokemon: {},
-        allPokemonNames: []
+        cachedTypeResults: {}
     },
 
     init() {
@@ -70,6 +73,7 @@ const App = {
         UI.elements.searchInput.addEventListener('keypress', (e) => {
             if (e.key === 'Enter') this.handleSearch(e.target.value);
         });
+        UI.elements.typeFilter.addEventListener('change', (e) => this.handleTypeFilter(e.target.value));
         UI.elements.prevButton.addEventListener('click', () => this.goToPage(this.state.currentPage - 1));
         UI.elements.nextButton.addEventListener('click', () => this.goToPage(this.state.currentPage + 1));
 
@@ -108,40 +112,79 @@ const App = {
 
     async initializePokedex() {
         UI.showLoading();
+        UI.renderTypeFilter();
+        
         try {
             const data = await PokemonAPI.getPokemonList(151, 0);
             this.state.allPokemonNames = data.results.map((p, index) => ({
                 name: p.name,
                 id: index + 1
             }));
+            this.state.filteredPokemonNames = [...this.state.allPokemonNames];
             this.state.totalCount = 151;
             this.state.isInitialized = true;
+            
             await this.loadCurrentPage();
         } catch (error) {
             console.error('Erro ao inicializar Pokédex:', error);
+            UI.hideLoading();
+        }
+    },
+
+    handleSearch(term) {
+        this.state.searchTerm = term.toLowerCase().trim();
+        this.state.currentPage = 1;
+        this.applyFilters();
+    },
+
+    async handleTypeFilter(type) {
+        this.state.selectedType = type;
+        this.state.currentPage = 1;
+        await this.applyFilters();
+    },
+
+    async applyFilters() {
+        UI.showLoading();
+        
+        try {
+            let baseList;
+
+            if (this.state.selectedType) {
+                if (this.state.cachedTypeResults[this.state.selectedType]) {
+                    baseList = this.state.cachedTypeResults[this.state.selectedType];
+                } else {
+                    baseList = await PokemonAPI.getPokemonByType(this.state.selectedType);
+                    this.state.cachedTypeResults[this.state.selectedType] = baseList;
+                }
+            } else {
+                baseList = this.state.allPokemonNames;
+            }
+
+            if (this.state.searchTerm) {
+                this.state.filteredPokemonNames = baseList.filter(p =>
+                    p.name.toLowerCase().includes(this.state.searchTerm) ||
+                    String(p.id).includes(this.state.searchTerm)
+                );
+            } else {
+                this.state.filteredPokemonNames = [...baseList];
+            }
+
+            this.state.totalCount = this.state.filteredPokemonNames.length;
+            this.updatePagination();
+            await this.loadCurrentPage();
+        } catch (error) {
+            console.error('Erro ao aplicar filtros:', error);
+            UI.hideLoading();
         }
     },
 
     async loadCurrentPage() {
         UI.showLoading();
+        
         try {
-            let pokemonToLoad;
-
-            if (this.state.searchTerm) {
-                const filtered = this.state.allPokemonNames.filter(p =>
-                    p.name.toLowerCase().includes(this.state.searchTerm) ||
-                    String(p.id).includes(this.state.searchTerm)
-                );
-                this.state.totalCount = filtered.length;
-                const start = (this.state.currentPage - 1) * this.state.itemsPerPage;
-                const end = start + this.state.itemsPerPage;
-                pokemonToLoad = filtered.slice(start, end);
-            } else {
-                this.state.totalCount = 151;
-                const offset = (this.state.currentPage - 1) * this.state.itemsPerPage;
-                const limit = Math.min(this.state.itemsPerPage, 151 - offset);
-                pokemonToLoad = this.state.allPokemonNames.slice(offset, offset + limit);
-            }
+            const start = (this.state.currentPage - 1) * this.state.itemsPerPage;
+            const end = start + this.state.itemsPerPage;
+            const pokemonToLoad = this.state.filteredPokemonNames.slice(start, end);
 
             const pokemonDetails = await Promise.all(
                 pokemonToLoad.map(async (p) => {
@@ -154,19 +197,12 @@ const App = {
                 })
             );
 
-            this.updatePagination();
             UI.renderPokemonList(pokemonDetails);
         } catch (error) {
             console.error('Erro ao carregar página:', error);
         } finally {
             UI.hideLoading();
         }
-    },
-
-    handleSearch(term) {
-        this.state.searchTerm = term.toLowerCase().trim();
-        this.state.currentPage = 1;
-        this.loadCurrentPage();
     },
 
     updatePagination() {
@@ -183,6 +219,7 @@ const App = {
     goToPage(page) {
         if (page < 1 || page > this.state.totalPages) return;
         this.state.currentPage = page;
+        this.updatePagination();
         this.loadCurrentPage();
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }
