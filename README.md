@@ -1,28 +1,11 @@
 # LumisDex
 
-Descrição do projeto LumisDex.
+Pokédex interativa desenvolvida com Vanilla JavaScript, consumindo dados da PokéAPI.
 
-## Sobre
+## Tecnologias
 
-Adicione informações sobre o projeto aqui.
-
-## Instalação
-
-```bash
-# Instruções de instalação
-```
-
-## Uso
-
-```bash
-# Instruções de uso
-```
-
-## Contribuição
-
-Contribuições são bem-vindas!
-
-## Licença
-
-Especifique a licença aqui.
+- HTML5
+- CSS3
+- JavaScript (Vanilla)
+- PokéAPI
 
