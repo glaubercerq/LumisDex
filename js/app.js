@@ -6,12 +6,62 @@ const App = {
         currentPage: 1,
         itemsPerPage: 15,
         totalPages: 1,
-        searchTerm: ''
+        searchTerm: '',
+        currentPageView: 'home',
+        isLoaded: false
     },
 
-    async init() {
-        await this.loadAllPokemon();
+    init() {
+        this.bindNavigation();
         this.bindEvents();
+    },
+
+    bindNavigation() {
+        const navLinks = document.querySelectorAll('.header__nav-link');
+        const exploreButton = document.getElementById('exploreButton');
+
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const page = link.dataset.page;
+                this.navigateTo(page);
+            });
+        });
+
+        if (exploreButton) {
+            exploreButton.addEventListener('click', () => {
+                this.navigateTo('pokedex');
+            });
+        }
+    },
+
+    navigateTo(page) {
+        const navLinks = document.querySelectorAll('.header__nav-link');
+        const pages = document.querySelectorAll('.page');
+
+        navLinks.forEach(link => {
+            link.classList.remove('header__nav-link--active');
+            if (link.dataset.page === page) {
+                link.classList.add('header__nav-link--active');
+            }
+        });
+
+        pages.forEach(p => {
+            p.classList.remove('page--active');
+        });
+
+        const targetPage = document.getElementById(`${page}Page`);
+        if (targetPage) {
+            targetPage.classList.add('page--active');
+        }
+
+        this.state.currentPageView = page;
+
+        if (page === 'pokedex' && !this.state.isLoaded) {
+            this.loadAllPokemon();
+        }
+
+        window.scrollTo({ top: 0, behavior: 'smooth' });
     },
 
     bindEvents() {
@@ -31,6 +81,7 @@ const App = {
             const pokemonPromises = data.results.map(p => PokemonAPI.getPokemonDetails(p.name));
             this.state.allPokemon = await Promise.all(pokemonPromises);
             this.state.filteredPokemon = [...this.state.allPokemon];
+            this.state.isLoaded = true;
             this.updatePagination();
             this.renderCurrentPage();
         } catch (error) {
