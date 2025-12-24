@@ -72,6 +72,38 @@ const App = {
         });
         UI.elements.prevButton.addEventListener('click', () => this.goToPage(this.state.currentPage - 1));
         UI.elements.nextButton.addEventListener('click', () => this.goToPage(this.state.currentPage + 1));
+
+        UI.elements.pokemonGrid.addEventListener('click', (e) => {
+            const card = e.target.closest('.pokemon-card');
+            if (card) {
+                const pokemonId = parseInt(card.dataset.id);
+                this.openPokemonDetail(pokemonId);
+            }
+        });
+
+        UI.elements.modalClose.addEventListener('click', () => UI.closeModal());
+        UI.elements.modalOverlay.addEventListener('click', () => UI.closeModal());
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') UI.closeModal();
+        });
+    },
+
+    async openPokemonDetail(pokemonId) {
+        UI.openModal();
+        UI.elements.modalBody.innerHTML = '<div class="loading loading--active"><div class="loading__spinner"></div></div>';
+
+        try {
+            let pokemon = this.state.cachedPokemon[pokemonId];
+            if (!pokemon) {
+                pokemon = await PokemonAPI.getPokemonDetails(pokemonId);
+                this.state.cachedPokemon[pokemonId] = pokemon;
+            }
+            UI.renderPokemonDetail(pokemon);
+        } catch (error) {
+            console.error('Erro ao carregar detalhes:', error);
+            UI.elements.modalBody.innerHTML = '<p style="text-align: center; color: var(--color-text-muted);">Erro ao carregar detalhes</p>';
+        }
     },
 
     async initializePokedex() {
